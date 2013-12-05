@@ -60,8 +60,8 @@ public class FileEditor extends AbstractPropertyEditor {
 			Image file = null;
 			Image reset = null;
 			try {
-				file = ImageIO.read(getClass().getClassLoader().getResourceAsStream("com/github/sarxos/sheet/icons/file.png"));
-				reset = ImageIO.read(getClass().getClassLoader().getResourceAsStream("com/github/sarxos/sheet/icons/reset.png"));
+				file = ImageIO.read(getClass().getClassLoader().getResourceAsStream("com/l2fprod/common/propertysheet/icons/file.png"));
+				reset = ImageIO.read(getClass().getClassLoader().getResourceAsStream("com/l2fprod/common/propertysheet/icons/reset.png"));
 			} catch (IOException e) {
 				throw new RuntimeException("Cannot load resource", e);
 			}

@@ -59,6 +59,7 @@ public class NumberConverters implements Converter {
         defaultFormat.setMaximumIntegerDigits(64);
         defaultFormat.setMinimumFractionDigits(0);
         defaultFormat.setMaximumFractionDigits(64);
+        defaultFormat.setGroupingUsed(false);
       }
     }
     return defaultFormat;

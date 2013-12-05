@@ -3,15 +3,22 @@ package info.zepinto.props;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PropertyUtils {
 
-	public static SerializableProperty createProperty(Object obj, Field f,
+	private static SerializableProperty createProperty(Object obj, Field f,
 			boolean forEdit) {
 		Property a = f.getAnnotation(Property.class);
 
@@ -123,42 +130,53 @@ public class PropertyUtils {
 				propertyValue = property.getValue();
 				Object oldValue = f.get(obj);
 
-				if (propertyValue.getClass() == f.getType())
+				try {
 					f.set(obj, propertyValue);
-				else {
-					
+				} catch (IllegalArgumentException e) {
 					try {
-                        if ("int".equalsIgnoreCase(f.getGenericType().toString())
-                                || "Integer".equalsIgnoreCase(f.getGenericType().toString())) {
-                            String className = propertyValue.getClass().toString();
-                            if(className.equals("java.lang.String")){
-                            	propertyValue = Integer.parseInt((String) propertyValue);
-                            	f.set(obj, propertyValue);
-                            }
-                            else if (className.equals("java.lang.Long")) {
-                            	propertyValue = Integer.valueOf(((Long) propertyValue).intValue());
-                                f.set(obj, propertyValue);
-                            }
-                        }
-                        else if ("short".equalsIgnoreCase(f.getGenericType().toString())) {
-                        	propertyValue = Short.valueOf(((Long) propertyValue).shortValue());
-                            f.set(obj, propertyValue);
-                        }
-                        else if ("byte".equalsIgnoreCase(f.getGenericType().toString())) {
-                        	propertyValue = Byte.valueOf(((Long) propertyValue).byteValue());
-                            f.set(obj, propertyValue);
-                        }
-                        else if ("float".equalsIgnoreCase(f.getGenericType().toString())) {
-                        	propertyValue = Float.valueOf(((Double) propertyValue).floatValue());
-                            f.set(obj, propertyValue);
-                        }
-                    }
-                    catch (Exception e2) {
-                        e2.printStackTrace();
-                    }					
+						if ("int".equalsIgnoreCase(f.getGenericType()
+								.toString())
+								|| "Integer".equalsIgnoreCase(f
+										.getGenericType().toString())) {
+							String className = propertyValue.getClass()
+									.toString();
+							if (className.equals("java.lang.String")) {
+								propertyValue = Integer
+										.parseInt((String) propertyValue);
+								f.set(obj, propertyValue);
+							} else if (className.equals("java.lang.Long")) {
+								propertyValue = Integer
+										.valueOf(((Long) propertyValue)
+												.intValue());
+								f.set(obj, propertyValue);
+							}
+						} else if ("short".equalsIgnoreCase(f.getGenericType()
+								.toString())) {
+							propertyValue = Short
+									.valueOf(((Long) propertyValue)
+											.shortValue());
+							f.set(obj, propertyValue);
+						} else if ("byte".equalsIgnoreCase(f.getGenericType()
+								.toString())) {
+							propertyValue = Byte.valueOf(((Long) propertyValue)
+									.byteValue());
+							f.set(obj, propertyValue);
+						} else if ("float".equalsIgnoreCase(f.getGenericType()
+								.toString())) {
+							propertyValue = Float
+									.valueOf(((Double) propertyValue)
+											.floatValue());
+							f.set(obj, propertyValue);
+						} else {
+							f.set(obj, propertyValue);
+						}
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					}
 				}
 
-				if (!oldValue.equals(propertyValue) && obj instanceof PropertyChangeListener)
+				if (!oldValue.equals(propertyValue)
+						&& obj instanceof PropertyChangeListener)
 					((PropertyChangeListener) obj)
 							.propertyChange(new PropertyChangeEvent(
 									PropertyUtils.class, f.getName(), oldValue,
@@ -168,5 +186,35 @@ public class PropertyUtils {
 				continue;
 			}
 		}
+
+	}
+
+	public static void saveProperties(Object obj, File f) throws IOException {
+		LinkedHashMap<String, SerializableProperty> props = getProperties(obj,
+				true);
+		Properties p = new Properties();
+		for (SerializableProperty prop : props.values())
+			p.setProperty(prop.getName(), prop.toString());
+
+		p.store(new FileWriter(f), "Properties save on " + new Date());
+	}
+
+	public static void loadProperties(Object obj, File f) throws IOException {
+		Properties p = new Properties();
+		p.load(new FileReader(f));
+		LinkedHashMap<String, SerializableProperty> props = getProperties(obj,
+				true);
+		for (Entry<Object, Object> entry : p.entrySet()) {
+			if (props.containsKey(entry.getKey())) {
+				SerializableProperty sp = props.get(entry.getKey());
+				sp.fromString("" + entry.getValue());
+			}
+		}
+
+		setProperties(obj, props);
+	}
+
+	public static void editProperties(Object obj) {
+
 	}
 }

@@ -3,6 +3,7 @@ package info.zepinto.props;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.LinkedHashMap;
 
 public class PropsTest implements PropertyChangeListener {
@@ -16,13 +17,13 @@ public class PropsTest implements PropertyChangeListener {
 	@Property
 	Rectangle r = new Rectangle(10, 20);
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		PropsTest pt = new PropsTest();
+		PropertyUtils.loadProperties(pt, new File("/home/zp/Desktop/pt.props"));
 		LinkedHashMap<String, SerializableProperty> props = PropertyUtils.getProperties(pt, true); 
 		System.out.println(props);
-		props.get("x").setValue(13);
 		PropertyUtils.setProperties(pt, props);
-		
+		PropertyUtils.saveProperties(pt, new File("/home/zp/Desktop/pt.props"));
 	}
 	
 	@Override

@@ -53,8 +53,8 @@ public class ColorEditor extends AbstractPropertyEditor {
 			Image pencil = null;
 			Image reset = null;
 			try {
-				pencil = ImageIO.read(getClass().getClassLoader().getResourceAsStream("com/github/sarxos/sheet/icons/pencil.png"));
-				reset = ImageIO.read(getClass().getClassLoader().getResourceAsStream("com/github/sarxos/sheet/icons/reset.png"));
+				pencil = ImageIO.read(getClass().getClassLoader().getResourceAsStream("com/l2fprod/common/propertysheet/icons/pencil.png"));
+				reset = ImageIO.read(getClass().getClassLoader().getResourceAsStream("com/l2fprod/common/propertysheet/icons/reset.png"));
 			} catch (IOException e) {
 				throw new RuntimeException("Cannot load resource", e);
 			}
