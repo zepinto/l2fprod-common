@@ -17,6 +17,9 @@ public class PropsTest implements PropertyChangeListener {
 	@Property
 	Rectangle r = new Rectangle(10, 20);
 	
+	@Property
+	File f = new File("/home/zp/Destop/x.tdt");
+	
 	public static void main(String[] args) throws Exception {
 		PropsTest pt = new PropsTest();
 		PropertyUtils.loadProperties(pt, new File("/home/zp/Desktop/pt.props"));
