@@ -17,6 +17,8 @@ public class SerializableProperty extends DefaultProperty {
 
 	private static final long serialVersionUID = 2246989350132202842L;
 
+	private Object editor = null;
+	
 	public SerializableProperty() {
 		super();
 	}
@@ -28,7 +30,7 @@ public class SerializableProperty extends DefaultProperty {
 		setCategory(prop.getCategory());
 		setValue(prop.getValue());
 		setEditable(prop.isEditable());
-		setShortDescription(prop.getShortDescription());
+		setShortDescription(prop.getShortDescription());		
 	}
 
 	public SerializableProperty(String name, Class<?> clazz, Object value) {
@@ -90,8 +92,7 @@ public class SerializableProperty extends DefaultProperty {
     public static SerializableProperty getPropertyInstance(String propertyName, Class<?> propertyClass, Object value, boolean isEditable) {
         
     	SerializableProperty property = new SerializableProperty();
-        
-    	property.setName(propertyName);
+        property.setName(propertyName);
         property.setDisplayName(propertyName);
         property.setType(propertyClass);
         property.setValue(value);
@@ -100,6 +101,14 @@ public class SerializableProperty extends DefaultProperty {
         return property;
     }
 	
+	public Object getEditor() {
+		return editor;
+	}
+
+	public void setEditor(Object editor) {
+		this.editor = editor;
+	}
+
 	public static void main(String[] args) {
 		SerializableProperty p = getPropertyInstance("test", Color.class, Color.red, true);
 		String s = p.toString();

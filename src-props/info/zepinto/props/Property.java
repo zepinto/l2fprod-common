@@ -57,6 +57,8 @@ public @interface Property {
      */
     String category() default "";
     
+    boolean editable() default true;
+    
     /**
      * The (full) class name of the editor to be used for this property
      */
