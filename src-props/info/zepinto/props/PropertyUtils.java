@@ -43,16 +43,17 @@ public class PropertyUtils {
 		if (a != null) {
 
 			f.setAccessible(true);
-			String name = a.name();
+			String name = f.getName();
+			String displayName = a.name();
 			String desc = a.description();
 			Class<? extends PropertyEditor> editClass = null;
 			String category = a.category();
 
-			if (a.name().length() == 0) {
-				name = f.getName();
-			}
+			if (a.name().length() == 0)
+				displayName = f.getName();		
+				
 			if (a.description().length() == 0) {
-				desc = f.getName();
+				desc = displayName;
 			}
 
 			if (a.editorClass() != PropertyEditor.class) {
@@ -80,8 +81,8 @@ public class PropertyUtils {
 			SerializableProperty pp = new SerializableProperty(name,
 					f.getType(), o);
 			pp.setShortDescription(desc);
-			pp.setEditable(!a.editable());
-			pp.setDisplayName(name);
+			pp.setEditable(a.editable());
+			pp.setDisplayName(displayName);
 			pp.setEditor(editClass);
 			if (category != null && category.length() > 0) {
 				pp.setCategory(category);
@@ -139,10 +140,7 @@ public class PropertyUtils {
 			if (a == null)
 				continue;
 
-			if (a.name().isEmpty())
-				name = f.getName();
-			else
-				name = a.name();
+			name = f.getName();
 
 			property = props.get(name);
 			if (property == null) {
@@ -258,13 +256,13 @@ public class PropertyUtils {
 
 		//if (!editable)
 			for (DefaultProperty p : props)
-				p.setEditable(editable);
+				p.setEditable(editable && p.isEditable());
 
 		for (SerializableProperty p : props)
 			psp.addProperty(p);
 
 		final PropertySheetDialog propertySheetDialog = createWindow(parent, editable, psp,
-				"Properties of "+obj.getClass());
+				"Properties of "+obj.getClass().getSimpleName());
 
 		if (!propertySheetDialog.ask()) {
 			System.out.println("cancelled");

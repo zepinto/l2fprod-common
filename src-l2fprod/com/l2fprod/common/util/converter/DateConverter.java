@@ -1,6 +1,5 @@
 package com.l2fprod.common.util.converter;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

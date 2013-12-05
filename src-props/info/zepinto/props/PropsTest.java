@@ -17,11 +17,17 @@ public class PropsTest implements PropertyChangeListener {
 	@Property
 	Rectangle r = new Rectangle(10, 20);
 	
-	@Property
+	@Property(name="A file", editable=false)
 	File f = new File("/home/zp/Destop/x.tdt");
 	
-	@Property
+	@Property(name="This is the date", description="Enter any date you want")
 	Date date = new Date();
+	
+	@Property
+	double d = 10.0;
+	
+	@Property
+	String s = "sdfsdf";
 	
 	public static void main(String[] args) throws Exception {
 		PropsTest pt = new PropsTest();
