@@ -40,6 +40,7 @@ public class ConverterRegistry implements Converter {
 		new AWTConverters().register(this);
 		new NumberConverters().register(this);
 		new FileConverter().register(this);
+		new DateConverter().register(this);
 	}
 
 	public void addConverter(Class from, Class to, Converter converter) {

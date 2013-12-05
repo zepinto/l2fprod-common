@@ -10,6 +10,8 @@ public class FileConverter implements Converter {
 	}
 
 	public Object convert(Class type, Object value) {
+		if (value == null)
+			return null;
 		if (String.class.equals(type) && File.class.equals(value.getClass())) {
 			return ((File) value).getAbsolutePath();
 		} else if (File.class.equals(type)

@@ -43,7 +43,7 @@ public class SerializableProperty extends DefaultProperty {
 
 	@Override
 	public String toString() {
-		Converter conv = ConverterRegistry.instance().getConverter(getValue().getClass(), String.class);
+		Converter conv = ConverterRegistry.instance().getConverter(getType(), String.class);
 		if (conv == null) {
 			try {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();

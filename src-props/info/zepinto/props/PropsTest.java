@@ -4,15 +4,15 @@ import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.LinkedHashMap;
+import java.util.Date;
 
 public class PropsTest implements PropertyChangeListener {
 
 	@Property
-	int x = 23;
+	Integer x = 23;
 	
 	@Property
-	int y = 10;
+	Integer y = 10;
 	
 	@Property
 	Rectangle r = new Rectangle(10, 20);
@@ -20,12 +20,14 @@ public class PropsTest implements PropertyChangeListener {
 	@Property
 	File f = new File("/home/zp/Destop/x.tdt");
 	
+	@Property
+	Date date = new Date();
+	
 	public static void main(String[] args) throws Exception {
 		PropsTest pt = new PropsTest();
-		PropertyUtils.loadProperties(pt, new File("/home/zp/Desktop/pt.props"));
-		LinkedHashMap<String, SerializableProperty> props = PropertyUtils.getProperties(pt, true); 
-		System.out.println(props);
-		PropertyUtils.setProperties(pt, props);
+		if (new File("/home/zp/Desktop/pt.props").canRead())
+			PropertyUtils.loadProperties(pt, new File("/home/zp/Desktop/pt.props"), false);
+		PropertyUtils.editProperties(null, pt, true);
 		PropertyUtils.saveProperties(pt, new File("/home/zp/Desktop/pt.props"));
 	}
 	
