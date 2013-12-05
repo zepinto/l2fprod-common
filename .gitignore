@@ -1,6 +1,2 @@
-l2fprod-common-shared/.settings
-l2fprod-common-shared/target
-l2fprod-common-sheet/.settings
-l2fprod-common-sheet/target
+bin
 .settings
-target
