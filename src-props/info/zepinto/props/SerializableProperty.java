@@ -25,7 +25,7 @@ public class SerializableProperty extends DefaultProperty {
 	
 	public SerializableProperty(Property prop) {
 		setName(prop.getName());
-		setType(prop.getClass());
+		setType(prop.getType());
 		setDisplayName(prop.getDisplayName());
 		setCategory(prop.getCategory());
 		setValue(prop.getValue());
@@ -45,7 +45,7 @@ public class SerializableProperty extends DefaultProperty {
 	public String toString() {
 		if (getType().equals(String.class))
 			return ""+getValue();
-		Converter conv = ConverterRegistry.instance().getConverter(getType(), String.class);
+		Converter conv = ConverterRegistry.instance().getConverter(getValue().getClass(), String.class);
 		if (conv == null) {
 			try {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();

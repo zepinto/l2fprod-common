@@ -9,7 +9,7 @@ import java.util.Date;
 public class PropsTest implements PropertyChangeListener {
 
 	@Property
-	int x = 23;
+	Number x = 23;
 	
 	@Property
 	Integer y = 10;
