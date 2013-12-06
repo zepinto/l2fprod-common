@@ -27,8 +27,6 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import com.l2fprod.common.propertysheet.DefaultProperty;
-import com.l2fprod.common.propertysheet.PropertyEditorRegistry;
-import com.l2fprod.common.propertysheet.PropertyRendererRegistry;
 import com.l2fprod.common.propertysheet.PropertySheet;
 import com.l2fprod.common.propertysheet.PropertySheetDialog;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
@@ -78,6 +76,7 @@ public class PropertyUtils {
 				}
 			}
 
+			
 			SerializableProperty pp = new SerializableProperty(name,
 					f.getType(), o);
 			pp.setShortDescription(desc);
@@ -87,6 +86,7 @@ public class PropertyUtils {
 			if (category != null && category.length() > 0) {
 				pp.setCategory(category);
 			}
+			System.out.println(pp.getType());
 			return pp;
 		}
 		return null;

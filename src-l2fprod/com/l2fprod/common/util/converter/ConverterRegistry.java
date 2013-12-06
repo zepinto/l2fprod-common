@@ -39,6 +39,7 @@ public class ConverterRegistry implements Converter {
 		new BooleanConverter().register(this);
 		new AWTConverters().register(this);
 		new NumberConverters().register(this);
+		new BasicNumberTypeConverters().register(this);
 		new FileConverter().register(this);
 		new DateConverter().register(this);
 	}

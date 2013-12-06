@@ -9,7 +9,7 @@ import java.util.Date;
 public class PropsTest implements PropertyChangeListener {
 
 	@Property
-	Integer x = 23;
+	int x = 23;
 	
 	@Property
 	Integer y = 10;
@@ -17,14 +17,14 @@ public class PropsTest implements PropertyChangeListener {
 	@Property
 	Rectangle r = new Rectangle(10, 20);
 	
-	@Property(name="A file", editable=false)
+	@Property(category="Advanced stuff!", name="A file", editable=false)
 	File f = new File("/home/zp/Destop/x.tdt");
 	
 	@Property(name="This is the date", description="Enter any date you want")
 	Date date = new Date();
 	
 	@Property
-	double d = 10.0;
+	float d = 10.0f;
 	
 	@Property
 	String s = "sdfsdf";

@@ -43,6 +43,8 @@ public class SerializableProperty extends DefaultProperty {
 
 	@Override
 	public String toString() {
+		if (getType().equals(String.class))
+			return ""+getValue();
 		Converter conv = ConverterRegistry.instance().getConverter(getType(), String.class);
 		if (conv == null) {
 			try {
@@ -64,6 +66,11 @@ public class SerializableProperty extends DefaultProperty {
 	}
 
 	public void fromString(String text) {
+		if (getType().equals(String.class)) {
+			setValue(text);
+			return;
+		}
+		
 		Converter conv = ConverterRegistry.instance().getConverter(String.class, getValue().getClass());
 		if (conv == null) {
 			try {
