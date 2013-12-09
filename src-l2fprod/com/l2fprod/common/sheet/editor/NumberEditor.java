@@ -49,7 +49,6 @@ import com.l2fprod.common.swing.LookAndFeelTweaks;
 public class NumberEditor extends AbstractPropertyEditor {
 
 	private double minVal, maxVal;
-	private int fracDigits;
 	private Object lastGoodValue;
 	protected NumberFormat format;
 	    
@@ -57,7 +56,6 @@ public class NumberEditor extends AbstractPropertyEditor {
 	public NumberEditor(double minVal, double maxVal, int fracDigits) {
 	    editor = new JTextField();
         ((JTextField)editor).setBorder(LookAndFeelTweaks.EMPTY_BORDER);
-        this.fracDigits = fracDigits;
         this.minVal = minVal;
         this.maxVal = maxVal;
 		

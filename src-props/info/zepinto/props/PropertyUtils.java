@@ -48,8 +48,8 @@ public class PropertyUtils {
 			String category = a.category();
 
 			if (a.name().length() == 0)
-				displayName = f.getName();		
-				
+				displayName = f.getName();
+
 			if (a.description().length() == 0) {
 				desc = displayName;
 			}
@@ -76,7 +76,6 @@ public class PropertyUtils {
 				}
 			}
 
-			
 			SerializableProperty pp = new SerializableProperty(name,
 					f.getType(), o);
 			pp.setShortDescription(desc);
@@ -154,55 +153,44 @@ public class PropertyUtils {
 
 				try {
 					f.set(obj, propertyValue);
-				} catch (IllegalArgumentException e) {
-					try {
-						if ("int".equalsIgnoreCase(f.getGenericType()
-								.toString())
-								|| "Integer".equalsIgnoreCase(f
-										.getGenericType().toString())) {
-							String className = propertyValue.getClass()
-									.toString();
-							if (className.equals("java.lang.String")) {
-								propertyValue = Integer
-										.parseInt((String) propertyValue);
-								f.set(obj, propertyValue);
-							} else if (className.equals("java.lang.Long")) {
-								propertyValue = Integer
-										.valueOf(((Long) propertyValue)
-												.intValue());
-								f.set(obj, propertyValue);
-							}
-						} else if ("short".equalsIgnoreCase(f.getGenericType()
-								.toString())) {
-							propertyValue = Short
-									.valueOf(((Long) propertyValue)
-											.shortValue());
-							f.set(obj, propertyValue);
-						} else if ("byte".equalsIgnoreCase(f.getGenericType()
-								.toString())) {
-							propertyValue = Byte.valueOf(((Long) propertyValue)
-									.byteValue());
-							f.set(obj, propertyValue);
-						} else if ("float".equalsIgnoreCase(f.getGenericType()
-								.toString())) {
-							propertyValue = Float
-									.valueOf(((Double) propertyValue)
-											.floatValue());
-							f.set(obj, propertyValue);
-						} else {
-							f.set(obj, propertyValue);
-						}
-					} catch (Exception e2) {
-						e2.printStackTrace();
-					}
 				}
+				catch (Exception e) {
+					switch (f.getGenericType().toString()) {
+					case "int":
+					case "Integer":
+						f.setInt(obj, (int)Double.parseDouble(propertyValue.toString()));
+						break;
+					case "long":
+					case "Long":
+						f.setLong(obj, (long)Double.parseDouble(propertyValue.toString()));
+						break;
+					case "short":
+					case "Short":
+						f.setShort(obj, (short)Double.parseDouble(propertyValue.toString()));
+						break;
+					case "byte":
+					case "Byte":
+						f.setByte(obj, (byte)Double.parseDouble(propertyValue.toString()));
+						break;
+					case "float":
+					case "Float":
+						f.setFloat(obj, (float)Double.parseDouble(propertyValue.toString()));
+						break;
+					case "double":
+					case "Double":
+						f.setDouble(obj, Double.parseDouble(propertyValue.toString()));
+						break;
+					default:
+						break;
+					}
+				}				
 
 				if (triggerEvents && !oldValue.equals(propertyValue)
 						&& obj instanceof PropertyChangeListener)
 					((PropertyChangeListener) obj)
-					.propertyChange(new PropertyChangeEvent(
-							PropertyUtils.class, f.getName(), oldValue,
-							propertyValue));
+							.propertyChange(new PropertyChangeEvent(
+									PropertyUtils.class, f.getName(), oldValue,
+									propertyValue));
 			} catch (Exception e) {
 				e.printStackTrace();
 				continue;
@@ -241,11 +229,12 @@ public class PropertyUtils {
 		setProperties(obj, props, triggerEvents);
 	}
 
-	public static void editProperties(Window parent, Object obj, boolean editable) {
+	public static void editProperties(Window parent, Object obj,
+			boolean editable) {
 
 		final PropertySheetPanel psp = new PropertySheetPanel();
-		//psp.setEditorFactory(new PropertyEditorRegistry());
-		//psp.setRendererFactory(new PropertyRendererRegistry());
+		// psp.setEditorFactory(new PropertyEditorRegistry());
+		// psp.setRendererFactory(new PropertyRendererRegistry());
 		psp.setMode(PropertySheet.VIEW_AS_CATEGORIES);
 		psp.setToolBarVisible(false);
 		psp.setEnabled(true);
@@ -254,26 +243,27 @@ public class PropertyUtils {
 		Collection<SerializableProperty> props = getProperties(obj, editable)
 				.values();
 
-		//if (!editable)
-			for (DefaultProperty p : props)
-				p.setEditable(editable && p.isEditable());
+		// if (!editable)
+		for (DefaultProperty p : props)
+			p.setEditable(editable && p.isEditable());
 
 		for (SerializableProperty p : props)
 			psp.addProperty(p);
 
-		final PropertySheetDialog propertySheetDialog = createWindow(parent, editable, psp,
-				"Properties of "+obj.getClass().getSimpleName());
+		final PropertySheetDialog propertySheetDialog = createWindow(parent,
+				editable, psp, "Properties of "
+						+ obj.getClass().getSimpleName());
 
 		if (!propertySheetDialog.ask()) {
 			System.out.println("cancelled");
 			return;
 		}
-		
+
 		LinkedHashMap<String, SerializableProperty> newProps = new LinkedHashMap<>();
 		for (com.l2fprod.common.propertysheet.Property p : psp.getProperties())
 			newProps.put(p.getName(), new SerializableProperty(p));
 
-		setProperties(obj, newProps, true);      
+		setProperties(obj, newProps, true);
 
 	}
 
@@ -300,7 +290,7 @@ public class PropertyUtils {
 		}
 		if (editable) {
 			propertySheetDialog
-			.setDialogMode(PropertySheetDialog.OK_CANCEL_DIALOG);
+					.setDialogMode(PropertySheetDialog.OK_CANCEL_DIALOG);
 		} else {
 			propertySheetDialog.setDialogMode(PropertySheetDialog.CLOSE_DIALOG);
 		}
@@ -330,8 +320,8 @@ public class PropertyUtils {
 												.getDialogMode() == PropertySheetDialog.CLOSE_DIALOG
 												|| sb == 0) {
 											((JButton) compL3)
-											.setText(propertySheetDialog
-													.getDialogMode() == PropertySheetDialog.CLOSE_DIALOG ? "Close"
+													.setText(propertySheetDialog
+															.getDialogMode() == PropertySheetDialog.CLOSE_DIALOG ? "Close"
 															: "Cancel");
 											sb--;
 											break;
@@ -353,8 +343,8 @@ public class PropertyUtils {
 			propertySheetDialog.getBanner().setTitle(title);
 			propertySheetDialog.setTitle(title);
 		}
-		//propertySheetDialog.setIconImage(ImageUtils.getImage("images/menus/settings.png"));
-		//propertySheetDialog.getBanner().setIcon(ImageUtils.getIcon("images/settings.png"));
+		// propertySheetDialog.setIconImage(ImageUtils.getImage("images/menus/settings.png"));
+		// propertySheetDialog.getBanner().setIcon(ImageUtils.getIcon("images/settings.png"));
 		propertySheetDialog.getContentPane().add(psp);
 		propertySheetDialog.pack();
 
