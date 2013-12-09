@@ -1,0 +1,30 @@
+<project name="AnnProps" default="jar">
+  
+  <property name="version" value="1.0"/>
+
+  <path id="classpath">
+    <pathelement location="bin" />
+    <pathelement location="lib/jcalendar-1.4.jar" />    
+  </path>
+  
+  <target name="compile">
+  		<mkdir dir="build"/>
+		<javac encoding="UTF-8" srcdir="src-l2fprod" destdir="build" includes="**/*.java" fork="false">     
+      		<classpath refid="classpath"/>
+		</javac>
+  		<javac encoding="UTF-8" srcdir="src-props" destdir="build" includes="**/*.java" fork="false">     
+  	      	<classpath refid="classpath"/>
+  		</javac>
+	</target>
+		
+	<target name="jar" depends="compile">
+		
+		<unjar src="lib/jcalendar-1.4.jar" dest="build"/>
+		<jar destfile="annprops-${version}.jar" basedir="build" index="true">
+			<!--manifest>
+				<attribute name="Main-Class" value=""/>
+			</manifest-->
+		</jar>
+	</target>
+
+</project>
