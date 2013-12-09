@@ -257,19 +257,21 @@ public class PropertyRendererRegistry implements PropertyRendererFactory {
 		registerRenderer(Character.class, renderer);
 
 		// numbers
-		NumberRenderer numberRenderer = new NumberRenderer();
-		registerRenderer(byte.class, numberRenderer);
-		registerRenderer(Byte.class, numberRenderer);
-		registerRenderer(double.class, numberRenderer);
-		registerRenderer(Double.class, numberRenderer);
-		registerRenderer(float.class, numberRenderer);
-		registerRenderer(Float.class, numberRenderer);
-		registerRenderer(int.class, numberRenderer);
-		registerRenderer(Integer.class, numberRenderer);
-		registerRenderer(long.class, numberRenderer);
-		registerRenderer(Long.class, numberRenderer);
-		registerRenderer(short.class, numberRenderer);
-		registerRenderer(Short.class, numberRenderer);
+		NumberRenderer intRenderer = new NumberRenderer(0);
+		NumberRenderer floatRenderer = new NumberRenderer(4);
+		NumberRenderer doubleRenderer = new NumberRenderer(10);
+		registerRenderer(byte.class, intRenderer);
+		registerRenderer(Byte.class, intRenderer);
+		registerRenderer(double.class, doubleRenderer);
+		registerRenderer(Double.class, doubleRenderer);
+		registerRenderer(float.class, floatRenderer);
+		registerRenderer(Float.class, floatRenderer);
+		registerRenderer(int.class, intRenderer);
+		registerRenderer(Integer.class, intRenderer);
+		registerRenderer(long.class, intRenderer);
+		registerRenderer(Long.class, intRenderer);
+		registerRenderer(short.class, intRenderer);
+		registerRenderer(Short.class, intRenderer);
 
 		registerRenderer(Date.class, new DateRenderer());
 

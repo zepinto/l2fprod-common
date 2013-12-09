@@ -9,10 +9,10 @@ import java.util.Date;
 public class PropsTest implements PropertyChangeListener {
 
 	@Property
-	Number x = 23;
+	byte x = 23;
 	
 	@Property
-	Integer y = 10;
+	long y = 10;
 	
 	@Property
 	Rectangle r = new Rectangle(10, 20);

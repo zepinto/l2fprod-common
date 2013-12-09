@@ -1,78 +1,163 @@
+/*
+ * Copyright (c) 2004-2013 Universidade do Porto - Faculdade de Engenharia
+ * Laboratório de Sistemas e Tecnologia Subaquática (LSTS)
+ * All rights reserved.
+ * Rua Dr. Roberto Frias s/n, sala I203, 4200-465 Porto, Portugal
+ *
+ * This file is part of Neptus, Command and Control Framework.
+ *
+ * Commercial Licence Usage
+ * Licencees holding valid commercial Neptus licences may use this file
+ * in accordance with the commercial licence agreement provided with the
+ * Software or, alternatively, in accordance with the terms contained in a
+ * written agreement between you and Universidade do Porto. For licensing
+ * terms, conditions, and further information contact lsts@fe.up.pt.
+ *
+ * European Union Public Licence - EUPL v.1.1 Usage
+ * Alternatively, this file may be used under the terms of the EUPL,
+ * Version 1.1 only (the "Licence"), appearing in the file LICENCE.md
+ * included in the packaging of this file. You may not use this work
+ * except in compliance with the Licence. Unless required by applicable
+ * law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific
+ * language governing permissions and limitations at
+ * https://www.lsts.pt/neptus/licence.
+ *
+ * For more information please see <http://lsts.fe.up.pt/neptus>.
+ *
+ * Author: José Pinto
+ * Nov 16, 2012
+ */
 package com.l2fprod.common.sheet.editor;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
 
-import javax.swing.SpinnerModel;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 
-import com.l2fprod.common.propertysheet.Property;
-
+import com.l2fprod.common.beans.editor.AbstractPropertyEditor;
+import com.l2fprod.common.swing.LookAndFeelTweaks;
 
 /**
- * Number editor.
+ * @author zp
  * 
- * @author Bartosz Firyn (SarXos)
  */
-public class NumberEditor extends SpinnerEditor {
+public class NumberEditor extends AbstractPropertyEditor {
 
-	public NumberEditor(Object property) {
-		super();
-
-		Property prop = (Property) property;
-		Class<?> type = prop.getType();
-
-		Number start = null;
-		Comparable<?> min = null;
-		Comparable<?> max = null;
-		Number step = null;
-
-		if (type == Byte.class || type == byte.class) {
-			start = Byte.valueOf((byte) 0);
-			min = Byte.valueOf((byte) (Byte.MIN_VALUE + 1));
-			max = Byte.valueOf((byte) (Byte.MAX_VALUE - 1));
-			step = Byte.valueOf((byte) 1);
-		} else if (type == Short.class || type == short.class) {
-			start = Short.valueOf((short) 0);
-			min = Short.valueOf((short) (Short.MIN_VALUE + 1));
-			max = Short.valueOf((short) (Short.MAX_VALUE - 1));
-			step = Short.valueOf((short) 1);
-		} else if (type == Integer.class || type == int.class) {
-			start = Integer.valueOf(0);
-			min = Integer.valueOf(Integer.MIN_VALUE + 1);
-			max = Integer.valueOf(Integer.MAX_VALUE - 1);
-			step = Integer.valueOf(1);
-		} else if (type == Long.class || type == long.class) {
-			start = Long.valueOf(0);
-			min = Long.valueOf(Long.MIN_VALUE + 1);
-			max = Long.valueOf(Long.MAX_VALUE - 1);
-			step = Long.valueOf(1);
-		} else if (type == Float.class || type == float.class) {
-			start = Float.valueOf(0);
-			min = Float.valueOf(-Float.MAX_VALUE + Float.MIN_NORMAL * 2);
-			max = Float.valueOf(Float.MAX_VALUE - Float.MIN_NORMAL * 2);
-			step = Float.valueOf(0.1f);
-		} else if (type == Double.class || type == double.class) {
-			start = Double.valueOf(0);
-			min = Double.valueOf(-Double.MAX_VALUE + Double.MIN_NORMAL * 2);
-			max = Double.valueOf(Double.MAX_VALUE - Double.MIN_NORMAL * 2);
-			step = Double.valueOf(0.01);
-		} else if (type == BigDecimal.class) {
-			start = new BigDecimal(0);
-			min = null;
-			max = null;
-			step = new BigDecimal(1);
-		} else if (type == BigInteger.class) {
-			start = new BigInteger(Integer.toString(0), 10);
-			min = null;
-			max = null;
-			step = new BigInteger(Integer.toString(1), 10);
+	private double minVal, maxVal;
+	private int fracDigits;
+	private Object lastGoodValue;
+	protected NumberFormat format;
+	    
+	    
+	public NumberEditor(double minVal, double maxVal, int fracDigits) {
+	    editor = new JTextField();
+        ((JTextField)editor).setBorder(LookAndFeelTweaks.EMPTY_BORDER);
+        this.fracDigits = fracDigits;
+        this.minVal = minVal;
+        this.maxVal = maxVal;
+		
+		if(fracDigits == 0) {
+			format = NumberFormat.getIntegerInstance();			
 		}
-
-		SpinnerModel model = new SpinnerNumberModel(start, min, max, step);
-
-		spinner.setModel(model);
-
-		formatSpinner();
+		else {
+			format = new DecimalFormat("0.0########");
+			((DecimalFormat)format).setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.US));
+		    format.setMaximumFractionDigits(fracDigits);			
+		}
+		format.setGroupingUsed(false);		
 	}
+	
+   
+    public Object getValue() {
+        String text = ((JTextField) editor).getText();
+        if (text == null || text.trim().length() == 0) {
+            return getDefaultValue();
+        }
+
+        // collect all numbers from this textfield
+        StringBuffer number = new StringBuffer();
+        number.ensureCapacity(text.length());
+        for (int i = 0, c = text.length(); i < c; i++) {
+            char character = text.charAt(i);
+            if ('.' == character || '-' == character || 'E' == character || Character.isDigit(character)) {
+                number.append(character);
+            }
+            else if (' ' == character) {
+                continue;
+            }
+            else {
+                break;
+            }
+        }
+        
+        Object before = lastGoodValue;
+        try {        	
+        	lastGoodValue = Double.parseDouble(number.toString());
+        	if ((double)lastGoodValue > maxVal)
+        		throw new Exception(lastGoodValue + " is too large");
+        	if ((double)lastGoodValue < minVal)
+        		throw new Exception(lastGoodValue + " is too small");
+        }
+        catch (Exception e) {
+        	lastGoodValue = before;
+            UIManager.getLookAndFeel().provideErrorFeedback(editor);
+        }
+
+        return lastGoodValue;
+    }
+
+    public void setValue(Object value) {
+        if (value instanceof Number) {
+            ((JTextField) editor).setText(format.format(((Number)value).doubleValue()));
+        }
+        else {
+            ((JTextField) editor).setText("" + getDefaultValue());
+        }
+        lastGoodValue = value;
+    }
+
+    private Object getDefaultValue() {
+       return 0d;
+    }
+    
+    public static class IntegerEditor extends NumberEditor {
+    	public IntegerEditor() {
+    		super(Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
+    	}
+    }
+    
+    public static class ShortEditor extends NumberEditor {
+    	public ShortEditor() {
+    		super(Short.MIN_VALUE, Short.MAX_VALUE, 0);
+    	}
+    }
+    
+    public static class ByteEditor extends NumberEditor {
+    	public ByteEditor() {
+    		super(Byte.MIN_VALUE, Byte.MAX_VALUE, 0);
+    	}
+    }
+    
+    public static class LongEditor extends NumberEditor {
+    	public LongEditor() {
+    		super(Long.MIN_VALUE, Long.MAX_VALUE, 0);
+    	}
+    }
+    
+    public static class FloatEditor extends NumberEditor {
+    	public FloatEditor() {
+    		super(-Float.MAX_VALUE, Float.MAX_VALUE, 4);
+    	}
+    }
+    
+    public static class DoubleEditor extends NumberEditor {
+    	public DoubleEditor() {
+    		super(-Double.MAX_VALUE, Double.MAX_VALUE, 12);
+    	}
+    }
 }

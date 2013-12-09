@@ -44,6 +44,12 @@ import com.l2fprod.common.sheet.editor.DimensionEditor;
 import com.l2fprod.common.sheet.editor.EnumEditor;
 import com.l2fprod.common.sheet.editor.FileEditor;
 import com.l2fprod.common.sheet.editor.NumberEditor;
+import com.l2fprod.common.sheet.editor.NumberEditor.ByteEditor;
+import com.l2fprod.common.sheet.editor.NumberEditor.DoubleEditor;
+import com.l2fprod.common.sheet.editor.NumberEditor.FloatEditor;
+import com.l2fprod.common.sheet.editor.NumberEditor.IntegerEditor;
+import com.l2fprod.common.sheet.editor.NumberEditor.LongEditor;
+import com.l2fprod.common.sheet.editor.NumberEditor.ShortEditor;
 
 
 /**
@@ -226,20 +232,20 @@ public class PropertyEditorRegistry implements PropertyEditorFactory {
 		registerEditor(char.class, CharacterEditor.class);
 		registerEditor(Character.class, CharacterEditor.class);
 
-		registerEditor(double.class, NumberEditor.class);
-		registerEditor(Double.class, NumberEditor.class);
-		registerEditor(float.class, NumberEditor.class);
-		registerEditor(Float.class, NumberEditor.class);
-		registerEditor(int.class, NumberEditor.class);
-		registerEditor(Integer.class, NumberEditor.class);
-		registerEditor(long.class, NumberEditor.class);
-		registerEditor(Long.class, NumberEditor.class);
-		registerEditor(short.class, NumberEditor.class);
-		registerEditor(Short.class, NumberEditor.class);
-		registerEditor(byte.class, NumberEditor.class);
-		registerEditor(Byte.class, NumberEditor.class);
-		registerEditor(BigInteger.class, NumberEditor.class);
-		registerEditor(BigDecimal.class, NumberEditor.class);
+		registerEditor(double.class, DoubleEditor.class);
+		registerEditor(Double.class, DoubleEditor.class);
+		registerEditor(float.class, FloatEditor.class);
+		registerEditor(Float.class, FloatEditor.class);
+		registerEditor(int.class, IntegerEditor.class);
+		registerEditor(Integer.class, IntegerEditor.class);
+		registerEditor(long.class, LongEditor.class);
+		registerEditor(Long.class, LongEditor.class);
+		registerEditor(short.class, ShortEditor.class);
+		registerEditor(Short.class, ShortEditor.class);
+		registerEditor(byte.class, ByteEditor.class);
+		registerEditor(Byte.class, ByteEditor.class);
+		registerEditor(BigInteger.class, LongEditor.class);
+		registerEditor(BigDecimal.class, DoubleEditor.class);
 
 		registerEditor(boolean.class, BooleanEditor.class);
 		registerEditor(Boolean.class, BooleanEditor.class);
