@@ -235,12 +235,9 @@ public class PropertyUtils {
 		p.store(writer, null);
 		return writer.toString().replaceAll("^\\#.*", "").trim()+"\n";
 	}
-
-	public static void loadProperties(Object obj, String properties,
-			boolean triggerEvents) throws IOException {
-		Properties p = new Properties();
-		StringReader reader = new StringReader(properties);
-		p.load(reader);
+	
+	public static void setProperties(Object obj, Properties p,
+			boolean triggerEvents) {
 		LinkedHashMap<String, SerializableProperty> props = getProperties(obj,
 				true);
 		for (Entry<Object, Object> entry : p.entrySet()) {
@@ -249,8 +246,15 @@ public class PropertyUtils {
 				sp.fromString("" + entry.getValue());
 			}
 		}
-
 		setProperties(obj, props, triggerEvents);
+	}
+
+	public static void loadProperties(Object obj, String properties,
+			boolean triggerEvents) throws IOException {
+		Properties p = new Properties();
+		StringReader reader = new StringReader(properties);
+		p.load(reader);
+		setProperties(obj, p, triggerEvents);
 	}
 
 	public static void loadProperties(Object obj, File f) throws IOException {
@@ -261,16 +265,7 @@ public class PropertyUtils {
 			throws IOException {
 		Properties p = new Properties();
 		p.load(new FileReader(f));
-		LinkedHashMap<String, SerializableProperty> props = getProperties(obj,
-				true);
-		for (Entry<Object, Object> entry : p.entrySet()) {
-			if (props.containsKey(entry.getKey())) {
-				SerializableProperty sp = props.get(entry.getKey());
-				sp.fromString("" + entry.getValue());
-			}
-		}
-
-		setProperties(obj, props, triggerEvents);
+		setProperties(obj, p, triggerEvents);
 	}
 
 	public static PropertySheetPanel getPropsPanel(Object obj, boolean editable) {
