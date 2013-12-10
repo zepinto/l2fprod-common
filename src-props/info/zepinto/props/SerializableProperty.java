@@ -80,12 +80,20 @@ public class SerializableProperty extends DefaultProperty {
 			}
 			catch (Exception e) {
 				e.printStackTrace();
-				setValue(null);
+				return;
 			}
 		}
 		else {
-			setValue(conv.convert(getValue().getClass(), text));
+			try {
+				setValue(conv.convert(getValue().getClass(), text));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
 		}
+		
+		
 	}
 	
     /**

@@ -107,11 +107,19 @@ public class NumberConverters implements Converter {
     registry.addConverter(Short.class, Short.class, this);
     registry.addConverter(Short.class, String.class, this);
     
+    registry.addConverter(Byte.class, Double.class, this);
+    registry.addConverter(Byte.class, Float.class, this);
+    registry.addConverter(Byte.class, Integer.class, this);
+    registry.addConverter(Byte.class, Long.class, this);
+    registry.addConverter(Byte.class, Short.class, this);
+    registry.addConverter(Byte.class, String.class, this);    
+    
     registry.addConverter(String.class, Double.class, this);
     registry.addConverter(String.class, Float.class, this);
     registry.addConverter(String.class, Integer.class, this);
     registry.addConverter(String.class, Long.class, this);
     registry.addConverter(String.class, Short.class, this);
+    registry.addConverter(String.class, Byte.class, this);
   }
 
   public Object convert(Class targetType, Object value) {
@@ -127,6 +135,8 @@ public class NumberConverters implements Converter {
         return new Long(((Number)value).longValue());
       } else if (Short.class.equals(targetType)) {
         return new Short(((Number)value).shortValue());
+      } else if (Byte.class.equals(targetType)) {
+          return new Byte(((Number)value).byteValue());
       } else {
         throw new IllegalArgumentException("this code must not be reached");
       }
@@ -147,6 +157,8 @@ public class NumberConverters implements Converter {
         return new Long((String)value);
       } else if (Short.class.equals(targetType)) {
         return new Short((String)value);
+      } else if (Byte.class.equals(targetType)) {
+          return new Byte((String)value);
       } else {
         throw new IllegalArgumentException("this code must not be reached");
       }

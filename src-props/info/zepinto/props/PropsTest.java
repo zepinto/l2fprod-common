@@ -1,6 +1,7 @@
 package info.zepinto.props;
 
 import java.awt.Rectangle;
+import java.awt.geom.Line2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -28,6 +29,9 @@ public class PropsTest implements PropertyChangeListener {
 	
 	@Property
 	String s = "sdfsdf";
+	
+	@Property
+	Line2D.Double line = new Line2D.Double(10, 10, 11, 11);
 	
 	public static void main(String[] args) throws Exception {
 		PropsTest pt = new PropsTest();

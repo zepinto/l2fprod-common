@@ -26,7 +26,6 @@ import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-import com.l2fprod.common.propertysheet.DefaultProperty;
 import com.l2fprod.common.propertysheet.PropertySheet;
 import com.l2fprod.common.propertysheet.PropertySheetDialog;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
@@ -85,7 +84,6 @@ public class PropertyUtils {
 			if (category != null && category.length() > 0) {
 				pp.setCategory(category);
 			}
-			System.out.println(pp.getType());
 			return pp;
 		}
 		return null;
@@ -159,22 +157,27 @@ public class PropertyUtils {
 					case "int":
 					case "Integer":
 						f.setInt(obj, (int)Double.parseDouble(propertyValue.toString()));
+						propertyValue = (int)Double.parseDouble(propertyValue.toString());
 						break;
 					case "long":
 					case "Long":
 						f.setLong(obj, (long)Double.parseDouble(propertyValue.toString()));
+						propertyValue = (long)Double.parseDouble(propertyValue.toString());
 						break;
 					case "short":
 					case "Short":
 						f.setShort(obj, (short)Double.parseDouble(propertyValue.toString()));
+						propertyValue = (short)Double.parseDouble(propertyValue.toString());
 						break;
 					case "byte":
 					case "Byte":
 						f.setByte(obj, (byte)Double.parseDouble(propertyValue.toString()));
+						propertyValue = (byte)Double.parseDouble(propertyValue.toString());
 						break;
 					case "float":
 					case "Float":
 						f.setFloat(obj, (float)Double.parseDouble(propertyValue.toString()));
+						propertyValue = (float)Double.parseDouble(propertyValue.toString());
 						break;
 					case "double":
 					case "Double":
@@ -228,13 +231,9 @@ public class PropertyUtils {
 
 		setProperties(obj, props, triggerEvents);
 	}
-
-	public static void editProperties(Window parent, Object obj,
-			boolean editable) {
-
-		final PropertySheetPanel psp = new PropertySheetPanel();
-		// psp.setEditorFactory(new PropertyEditorRegistry());
-		// psp.setRendererFactory(new PropertyRendererRegistry());
+	
+	public static PropertySheetPanel getPropsPanel(Object obj, boolean editable) {
+		PropertySheetPanel psp = new PropertySheetPanel();
 		psp.setMode(PropertySheet.VIEW_AS_CATEGORIES);
 		psp.setToolBarVisible(false);
 		psp.setEnabled(true);
@@ -243,19 +242,25 @@ public class PropertyUtils {
 		Collection<SerializableProperty> props = getProperties(obj, editable)
 				.values();
 
-		// if (!editable)
-		for (DefaultProperty p : props)
+		for (SerializableProperty p : props) {
 			p.setEditable(editable && p.isEditable());
-
-		for (SerializableProperty p : props)
 			psp.addProperty(p);
+		}
+
+		return psp;
+	}
+
+	public static void editProperties(Window parent, Object obj,
+			boolean editable) {
+
+		final PropertySheetPanel psp = getPropsPanel(obj, editable);
 
 		final PropertySheetDialog propertySheetDialog = createWindow(parent,
 				editable, psp, "Properties of "
 						+ obj.getClass().getSimpleName());
 
 		if (!propertySheetDialog.ask()) {
-			System.out.println("cancelled");
+			//cancelled
 			return;
 		}
 
