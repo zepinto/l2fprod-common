@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Date;
@@ -151,42 +153,52 @@ public class PropertyUtils {
 
 				try {
 					f.set(obj, propertyValue);
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					switch (f.getGenericType().toString()) {
 					case "int":
 					case "Integer":
-						f.setInt(obj, (int)Double.parseDouble(propertyValue.toString()));
-						propertyValue = (int)Double.parseDouble(propertyValue.toString());
+						f.setInt(obj, (int) Double.parseDouble(propertyValue
+								.toString()));
+						propertyValue = (int) Double.parseDouble(propertyValue
+								.toString());
 						break;
 					case "long":
 					case "Long":
-						f.setLong(obj, (long)Double.parseDouble(propertyValue.toString()));
-						propertyValue = (long)Double.parseDouble(propertyValue.toString());
+						f.setLong(obj, (long) Double.parseDouble(propertyValue
+								.toString()));
+						propertyValue = (long) Double.parseDouble(propertyValue
+								.toString());
 						break;
 					case "short":
 					case "Short":
-						f.setShort(obj, (short)Double.parseDouble(propertyValue.toString()));
-						propertyValue = (short)Double.parseDouble(propertyValue.toString());
+						f.setShort(obj, (short) Double
+								.parseDouble(propertyValue.toString()));
+						propertyValue = (short) Double
+								.parseDouble(propertyValue.toString());
 						break;
 					case "byte":
 					case "Byte":
-						f.setByte(obj, (byte)Double.parseDouble(propertyValue.toString()));
-						propertyValue = (byte)Double.parseDouble(propertyValue.toString());
+						f.setByte(obj, (byte) Double.parseDouble(propertyValue
+								.toString()));
+						propertyValue = (byte) Double.parseDouble(propertyValue
+								.toString());
 						break;
 					case "float":
 					case "Float":
-						f.setFloat(obj, (float)Double.parseDouble(propertyValue.toString()));
-						propertyValue = (float)Double.parseDouble(propertyValue.toString());
+						f.setFloat(obj, (float) Double
+								.parseDouble(propertyValue.toString()));
+						propertyValue = (float) Double
+								.parseDouble(propertyValue.toString());
 						break;
 					case "double":
 					case "Double":
-						f.setDouble(obj, Double.parseDouble(propertyValue.toString()));
+						f.setDouble(obj,
+								Double.parseDouble(propertyValue.toString()));
 						break;
 					default:
 						break;
 					}
-				}				
+				}
 
 				if (triggerEvents && !oldValue.equals(propertyValue)
 						&& obj instanceof PropertyChangeListener)
@@ -212,6 +224,35 @@ public class PropertyUtils {
 		p.store(new FileWriter(f), "Properties saved on " + new Date());
 	}
 
+	public static String saveProperties(Object obj) throws IOException {
+		LinkedHashMap<String, SerializableProperty> props = getProperties(obj,
+				true);
+		Properties p = new Properties();
+		for (SerializableProperty prop : props.values())
+			p.setProperty(prop.getName(), prop.toString());
+
+		StringWriter writer = new StringWriter();
+		p.store(writer, null);
+		return writer.toString().replaceAll("^\\#.*", "").trim()+"\n";
+	}
+
+	public static void loadProperties(Object obj, String properties,
+			boolean triggerEvents) throws IOException {
+		Properties p = new Properties();
+		StringReader reader = new StringReader(properties);
+		p.load(reader);
+		LinkedHashMap<String, SerializableProperty> props = getProperties(obj,
+				true);
+		for (Entry<Object, Object> entry : p.entrySet()) {
+			if (props.containsKey(entry.getKey())) {
+				SerializableProperty sp = props.get(entry.getKey());
+				sp.fromString("" + entry.getValue());
+			}
+		}
+
+		setProperties(obj, props, triggerEvents);
+	}
+
 	public static void loadProperties(Object obj, File f) throws IOException {
 		loadProperties(obj, f, true);
 	}
@@ -231,7 +272,7 @@ public class PropertyUtils {
 
 		setProperties(obj, props, triggerEvents);
 	}
-	
+
 	public static PropertySheetPanel getPropsPanel(Object obj, boolean editable) {
 		PropertySheetPanel psp = new PropertySheetPanel();
 		psp.setMode(PropertySheet.VIEW_AS_CATEGORIES);
@@ -260,7 +301,7 @@ public class PropertyUtils {
 						+ obj.getClass().getSimpleName());
 
 		if (!propertySheetDialog.ask()) {
-			//cancelled
+			// cancelled
 			return;
 		}
 

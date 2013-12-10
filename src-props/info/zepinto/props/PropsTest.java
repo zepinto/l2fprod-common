@@ -39,6 +39,7 @@ public class PropsTest implements PropertyChangeListener {
 			PropertyUtils.loadProperties(pt, new File("/home/zp/Desktop/pt.props"), false);
 		PropertyUtils.editProperties(null, pt, true);
 		PropertyUtils.saveProperties(pt, new File("/home/zp/Desktop/pt.props"));
+		System.out.println(PropertyUtils.saveProperties(pt));
 	}
 	
 	@Override
