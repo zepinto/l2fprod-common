@@ -99,12 +99,17 @@ public class PropertyUtils {
 			c = o.getClass();
 
 		HashSet<Field> fields = new HashSet<>();
-		for (Field f : c.getFields())
-			fields.add(f);
-		for (Field f : c.getDeclaredFields()) {
-			f.setAccessible(true);
-			fields.add(f);
-		}
+		
+		while (c != Object.class) {
+			for (Field f : c.getFields())
+				fields.add(f);
+			for (Field f : c.getDeclaredFields()) {
+				f.setAccessible(true);
+				fields.add(f);
+			}
+			c = c.getSuperclass(); 
+		} 
+		
 		return fields.toArray(new Field[0]);
 	}
 
